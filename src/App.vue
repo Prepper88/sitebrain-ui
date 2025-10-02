@@ -46,7 +46,7 @@
         <p>3.1 Wall Assemblies</p>
         <p>
           Wall assemblies must have a minimum fire-resistive rating of
-          <span class="highlight">2 hours.</span>
+          <span class="">2 hours.</span>
         </p>
       </div>
     </div>
