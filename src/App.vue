@@ -1,95 +1,75 @@
-<script setup>
-</script>
-
 <template>
-  <div class="container">
-    <!-- Top Navigation Tabs -->
-    <div class="tabs">
-      <span class="active">Q&A</span>
-      <span>Discrepancy Checker</span>
-      <span>Project Documents</span>
-      <span>Project Overview</span>
+  <div id="app">
+    <!-- 全局顶部导航 -->
+    <header class="top-bar">
+      <h1 class="logo">🏗️ Construction AI Assistant</h1>
+      <nav class="nav-links">
+        <router-link to="/chat" active-class="active">Q&A</router-link>
+        <router-link to="/discrepancy" active-class="active">Discrepancy Checker</router-link>
+        <router-link to="/documents" active-class="active">Project Documents</router-link>
+        <router-link to="/dashboard" active-class="active">Project Overview</router-link>
+      </nav>
       <div class="integrations">
         <span class="green-dot"></span> Procore
         <span class="green-dot"></span> Autodesk Docs
         <span class="green-dot"></span> Gmail
       </div>
-    </div>
+    </header>
 
-    <!-- Q&A Section -->
-    <div class="qa-box">
-      <input class="question" placeholder="Ask a question about the project..." />
-      <div class="answer-box">
-        <p class="question-text">
-          What’s the fire rating requirement for the wall assembly in Section 3
-        </p>
-        <p class="answer-text">
-          The fire rating requirement for the wall assembly in Section 3 is <strong>2 hours</strong>.
-          <a href="#">Spec-12345, Section 3.1</a>
-        </p>
-      </div>
-    </div>
-
-    <!-- Files and Specification Section -->
-    <div class="bottom-box">
-      <div class="files">
-        <p><strong>Files</strong></p>
-        <button class="upload">+ Upload files</button>
-        <ul>
-          <li>📄 Blueprint_A.pdf</li>
-          <li>📄 Spec-12345.pdf</li>
-        </ul>
-      </div>
-      <div class="spec">
-        <p><strong>Specification</strong></p>
-        <p>3. Fire-Resistive Assemblies</p>
-        <p>3.1 Wall Assemblies</p>
-        <p>
-          Wall assemblies must have a minimum fire-resistive rating of
-          <span class="">2 hours.</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="buttons">
-      <button>Generate RFI</button>
-      <button>Export as PDF</button>
-    </div>
+    <!-- 页面内容 -->
+    <main class="main-view">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <style scoped>
-.container {
+#app {
   font-family: sans-serif;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+  background-color: #fff;
+  color: #333;
 }
 
-.tabs {
+/* 顶部栏 */
+.top-bar {
   display: flex;
   align-items: center;
-  gap: 20px;
-  font-weight: bold;
+  justify-content: space-between;
+  padding: 15px 30px;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  background-color: #fafafa;
 }
 
-.tabs span.active {
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 导航链接 */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+.nav-links a.active {
   color: black;
   border-bottom: 2px solid black;
   padding-bottom: 3px;
 }
 
+/* 集成状态 */
 .integrations {
-  margin-left: auto;
   display: flex;
-  gap: 15px;
-  font-weight: normal;
-  font-size: 14px;
   align-items: center;
+  gap: 15px;
+  font-size: 14px;
 }
 
 .green-dot {
@@ -101,58 +81,8 @@
   margin-right: 5px;
 }
 
-.qa-box {
-  margin-bottom: 20px;
-}
-
-.question {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 15px;
-}
-
-.answer-box {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 6px;
-}
-
-.question-text {
-  font-weight: bold;
-}
-
-.answer-text a {
-  margin-left: 10px;
-  color: #0077cc;
-}
-
-.bottom-box {
-  display: flex;
-  gap: 30px;
-  margin-top: 20px;
-}
-
-.files,
-.spec {
-  flex: 1;
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 6px;
-}
-
-.upload {
-  margin: 10px 0;
-}
-
-.highlight {
-  background: yellow;
-  font-weight: bold;
-}
-
-.buttons {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
+/* 主内容区域 */
+.main-view {
+  padding: 20px 30px;
 }
 </style>
