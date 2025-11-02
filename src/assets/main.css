@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  background-color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.chat-page {
+  background-color: #ffffff;
+}
+
+a {
+  color: #0048ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

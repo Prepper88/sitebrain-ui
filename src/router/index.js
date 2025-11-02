@@ -1,12 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Chat from '../views/Chat.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import ChatView from "../views/ChatView.vue";
+import DocumentsView from "../views/DocumentsView.vue";
 
 const routes = [
-  { path: '/chat', component: Chat },
-  { path: '/', redirect: '/chat' }
-]
+  { path: "/", redirect: "/chat" },
+  { path: "/chat", component: ChatView },
+  { path: "/documents", component: DocumentsView },
+];
 
-export const router = createRouter({
+export default createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
