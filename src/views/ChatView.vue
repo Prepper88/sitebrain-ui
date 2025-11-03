@@ -33,9 +33,8 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, reactive } from "vue";
 import ChatMessage from "../components/ChatMessage.vue";
-import { reactive } from "vue";
 
 const messages = ref([
   { role: "bot", content: "Hello! I'm your RAG assistant. Ask me anything." },
@@ -53,7 +52,6 @@ async function sendMessage() {
   userInput.value = "";
   loading.value = true;
 
-  // Add a placeholder bot message
   const botMsg = reactive({ role: "bot", content: "Thinking...", sources: [] });
   messages.value.push(botMsg);
 
@@ -79,13 +77,12 @@ async function sendMessage() {
       const chunk = decoder.decode(value, { stream: true });
       fullText += chunk;
 
-      // ✅ Real-time rendering
       const endIndex = fullText.indexOf("__END__");
       if (endIndex === -1) {
-        botMsg.content = fullText; // progressively update
-        await scrollToBottom();
+        botMsg.content = fullText;
+        await nextTick();
+        scrollToBottomSmooth();
       } else {
-        // ✅ split answer and meta
         const answerText = fullText.slice(0, endIndex).trim();
         const metaStr = fullText.slice(endIndex + "__END__".length);
         botMsg.content = answerText;
@@ -111,54 +108,66 @@ async function sendMessage() {
     });
   } finally {
     loading.value = false;
-    await scrollToBottom();
+    await nextTick();
+    scrollToBottomSmooth();
   }
 }
 
-// Auto scroll to bottom
-async function scrollToBottom() {
-  await nextTick();
+// Smooth auto-scroll
+function scrollToBottomSmooth() {
   const el = chatContainer.value;
-  if (el) el.scrollTop = el.scrollHeight;
+  if (!el) return;
+  const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+  if (atBottom) {
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }
 }
 </script>
 
 <style scoped>
+/* Root layout */
 .chat-page {
   display: flex;
   justify-content: center;
-  height: 100vh;
+  align-items: center;
+  height: 100vh; /* fixed viewport height */
   background-color: #ffffff;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden; /* prevent outer scroll */
 }
 
+/* Chat container */
 .chat-container {
   display: flex;
   flex-direction: column;
   width: 800px;
+  height: 100%; /* occupy full height */
   background-color: #ffffff;
   border-radius: 8px;
-  height: 100%;
+  overflow: hidden;
 }
 
-/* Messages area */
+/* Scrollable messages area */
 .chat-messages {
   flex: 1;
-  overflow-y: auto;
-  padding: 32px 40px;
+  overflow-y: auto; /* internal scroll only */
+  padding: 24px 32px;
   background-color: #ffffff;
+  scroll-behavior: smooth;
 }
 
-/* Input area */
+/* Input area - fixed at bottom */
 .chat-input {
+  flex-shrink: 0; /* prevent from being pushed */
   display: flex;
   align-items: center;
   padding: 16px 32px;
   background-color: #ffffff;
-  border-top: none;
+  border-top: 1px solid #eee;
 }
 
+/* Input field */
 .chat-input input {
   flex: 1;
   padding: 12px 14px;
@@ -167,13 +176,16 @@ async function scrollToBottom() {
   background-color: #f7f7f8;
   font-size: 15px;
   color: #111;
+  outline: none;
 }
 
+/* Disabled input */
 .chat-input input:disabled {
   background-color: #f1f1f1;
   cursor: not-allowed;
 }
 
+/* Send button */
 .chat-input button {
   margin-left: 12px;
   padding: 10px 20px;
@@ -186,10 +198,12 @@ async function scrollToBottom() {
   transition: background-color 0.2s;
 }
 
+/* Button hover */
 .chat-input button:hover {
   background-color: #0e906f;
 }
 
+/* Disabled button */
 .chat-input button.disabled,
 .chat-input button:disabled {
   background-color: #c8e8df;
