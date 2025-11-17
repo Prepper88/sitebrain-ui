@@ -11,9 +11,10 @@
 
       <div v-if="sources?.length" class="sources">
         <div v-for="(src, idx) in sources" :key="idx" class="source-item">
-          <a :href="src.chunk.url" target="_blank">
+          <!-- 用 span + click，而不是 a + href -->
+          <span class="source-link" @click="openDocument(src)">
             📄 {{ src.chunk.doc }} ({{ src.chunk.page_number }})
-          </a>
+          </span>
         </div>
       </div>
     </div>
@@ -21,11 +22,22 @@
 </template>
 
 <script setup>
-defineProps({
+import emitter from "../eventBus"; // ChatMessage.vue 在 src/components 下，返回到 src
+
+const props = defineProps({
   role: String,
   content: String,
   sources: Array,
 });
+
+// 点击引用时：发出 open-document 事件，携带文件名
+function openDocument(src) {
+  // 后端返回的 doc 现在是类似 "docs/646-668.pdf"
+  const raw = src.chunk.doc || "";
+  const filename = raw.replace(/^docs\//, ""); // 去掉 docs/
+
+  emitter.emit("open-document", filename);
+}
 </script>
 
 <style scoped>
@@ -90,6 +102,16 @@ defineProps({
 }
 
 .source-item a:hover {
+  text-decoration: underline;
+}
+
+.source-link {
+  color: #0048ff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.source-link:hover {
   text-decoration: underline;
 }
 

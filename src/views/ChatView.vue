@@ -35,6 +35,15 @@
 <script setup>
 import { ref, nextTick, reactive } from "vue";
 import ChatMessage from "../components/ChatMessage.vue";
+import { onMounted, onUnmounted, onActivated, onDeactivated } from "vue";
+
+defineOptions({
+  name: "ChatView",
+});
+onMounted(() => console.log("[ChatView] mounted"));
+onUnmounted(() => console.log("[ChatView] unmounted"));
+onActivated(() => console.log("[ChatView] activated (from cache)"));
+onDeactivated(() => console.log("[ChatView] deactivated (kept alive)"));
 
 const messages = ref([
   { role: "bot", content: "Hello! I'm your RAG assistant. Ask me anything." },

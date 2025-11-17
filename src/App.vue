@@ -15,23 +15,44 @@
         </RouterLink>
       </nav>
     </header>
-
-    <!-- 主内容区域 -->
     <main class="main-content">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <KeepAlive>
+          <component :is="Component" />
+        </KeepAlive>
+      </RouterView>
     </main>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { computed, onMounted, onBeforeUnmount } from "vue";
+import emitter from "./eventBus";
 
 const route = useRoute();
+const router = useRouter();
+
 const menu = [
   { label: "Chat", path: "/chat" },
   { label: "Documents", path: "/documents" },
 ];
+
+// 监听 open-document 事件：切换到 Documents，再把文件名转发给 DocumentsView
+function handleOpenDocument(filename) {
+  // 切换到 Documents 页
+  router.push("/documents");
+  // 通知 DocumentsView 去选中这个文件
+  emitter.emit("select-document", filename);
+}
+
+onMounted(() => {
+  emitter.on("open-document", handleOpenDocument);
+});
+
+onBeforeUnmount(() => {
+  emitter.off("open-document", handleOpenDocument);
+});
 </script>
 
 <style scoped>

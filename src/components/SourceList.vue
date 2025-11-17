@@ -1,24 +1,27 @@
+<script setup>
+import emitter from "@/eventBus";
+defineProps({ sources: Array });
+
+function openDoc(src) {
+  const filename = src.title.replace(/^docs\//, "");
+  emitter.emit("open-document", filename);
+}
+</script>
+
 <template>
   <div class="sources">
     <div v-for="(src, idx) in sources" :key="idx" class="source-item">
-      <a :href="src.url" target="_blank">
+      <span class="link" @click="openDoc(src)">
         📄 {{ src.title }} (Section {{ src.section }})
-      </a>
+      </span>
     </div>
   </div>
 </template>
 
-<script setup>
-defineProps({ sources: Array });
-</script>
-
 <style scoped>
-.sources {
-  margin-top: 5px;
-  font-size: 0.9em;
-  color: #555;
-}
-.source-item {
-  margin: 3px 0;
+.source-item .link {
+  cursor: pointer;
+  color: #0077ff;
+  text-decoration: underline;
 }
 </style>
