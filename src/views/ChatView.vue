@@ -134,88 +134,153 @@ function scrollToBottomSmooth() {
 </script>
 
 <style scoped>
-/* Root layout */
+/* 整页背景：和顶部导航风格统一的淡灰白 */
 .chat-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* fixed viewport height */
-  background-color: #ffffff;
+  height: 100vh;
+  background-color: #f5f5f7; /* 类似 macOS/iCloud 背景 */
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
-  overflow: hidden; /* prevent outer scroll */
+  overflow: hidden;
 }
 
-/* Chat container */
+/* 中间聊天容器：纯白、圆角 + 轻微阴影，有层次感 */
 .chat-container {
   display: flex;
   flex-direction: column;
   width: 800px;
-  height: 100%; /* occupy full height */
-  background-color: #ffffff;
-  border-radius: 8px;
+  height: 100%;
+  position: relative;
+  background-color: #ffffff; /* 一个颜色 */
+  border-radius: 24px;
   overflow: hidden;
+  border: 1px solid rgba(209, 213, 219, 0.7);
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(148, 163, 184, 0.18);
 }
 
-/* Scrollable messages area */
+/* 消息区域：也是纯白，和容器融为一体 */
 .chat-messages {
   flex: 1;
-  overflow-y: auto; /* internal scroll only */
+  overflow-y: auto;
   padding: 24px 32px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* 不再用渐变 */
   scroll-behavior: smooth;
+  color: #111827;
 }
 
-/* Input area - fixed at bottom */
+/* 渐变滚动条：蓝 → 青色，保持一点科技感 */
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background-image: linear-gradient(180deg, #3b82f6, #06b6d4);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.55);
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(180deg, #2563eb, #0ea5e9);
+}
+
+/* 底部输入区：白色条，和顶部导航一致 */
 .chat-input {
-  flex-shrink: 0; /* prevent from being pushed */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding: 16px 32px;
+  padding: 16px 28px;
   background-color: #ffffff;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(229, 231, 235, 1);
 }
 
-/* Input field */
+/* 输入框：浅灰背景 + 细描边 */
 .chat-input input {
   flex: 1;
   padding: 12px 14px;
-  border-radius: 6px;
-  border: none;
-  background-color: #f7f7f8;
-  font-size: 15px;
-  color: #111;
+  border-radius: 999px;
+  border: 1px solid rgba(209, 213, 219, 1);
+  background-color: #f3f4f6;
+  font-size: 14px;
+  color: #111827;
   outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.chat-input input::placeholder {
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.chat-input input:focus {
+  background-color: #ffffff;
+  border-color: #3b82f6;
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.25),
+    0 0 0 6px rgba(59, 130, 246, 0.12);
 }
 
 /* Disabled input */
 .chat-input input:disabled {
-  background-color: #f1f1f1;
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
   cursor: not-allowed;
+  color: #9ca3af;
 }
 
-/* Send button */
+/* 发送按钮：和顶部蓝色主题统一 */
 .chat-input button {
-  margin-left: 12px;
-  padding: 10px 20px;
+  margin-left: 14px;
+  padding: 10px 22px;
   border: none;
-  border-radius: 6px;
-  background-color: #10a37f;
-  color: white;
-  font-size: 15px;
+  border-radius: 999px;
+  background-image: linear-gradient(135deg, #3b82f6, #06b6d4);
+  background-size: 200% 200%;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background-color 0.2s;
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.22),
+    0 0 0 1px rgba(129, 140, 248, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-position 0.25s ease,
+    opacity 0.15s ease;
 }
 
-/* Button hover */
-.chat-input button:hover {
-  background-color: #0e906f;
+.chat-input button:hover:not(.disabled):not(:disabled) {
+  background-position: 100% 0;
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 32px rgba(37, 99, 235, 0.3),
+    0 0 0 1px rgba(37, 99, 235, 0.45);
+}
+
+.chat-input button:active:not(.disabled):not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.22),
+    0 0 0 1px rgba(37, 99, 235, 0.4);
 }
 
 /* Disabled button */
 .chat-input button.disabled,
 .chat-input button:disabled {
-  background-color: #c8e8df;
+  background-image: linear-gradient(135deg, #cbd5e1, #e5e7eb);
+  box-shadow: none;
+  color: #6b7280;
+  opacity: 0.9;
   cursor: not-allowed;
 }
 </style>
+

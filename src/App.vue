@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 顶部导航栏 -->
     <header class="top-nav">
-      <h2 class="logo">SiteBrain</h2>
+      <img class="logo-img" src="/sitebrain1.png" alt="logo" />
       <nav class="tabs">
         <RouterLink
           v-for="item in menu"
@@ -11,8 +11,10 @@
           class="nav-item"
           :class="{ active: $route.path === item.path }"
         >
-          {{ item.label }}
+          <img class="nav-icon" :src="item.icon" />
+          <span>{{ item.label }}</span>
         </RouterLink>
+
       </nav>
     </header>
     <main class="main-content">
@@ -34,8 +36,8 @@ const route = useRoute();
 const router = useRouter();
 
 const menu = [
-  { label: "Chat", path: "/chat" },
-  { label: "Documents", path: "/documents" },
+  { label: "Chat", path: "/chat", icon: "/icons/chat.png" },
+  { label: "Documents", path: "/documents", icon: "/icons/docs.png" },
 ];
 
 // 监听 open-document 事件：切换到 Documents，再把文件名转发给 DocumentsView
@@ -101,6 +103,22 @@ onBeforeUnmount(() => {
 .nav-item.active {
   color: #007bff;
   border-bottom-color: #007bff;
+}
+.logo-img {
+  height: 65px;
+  width: auto;
+  display: block;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-icon {
+  height: 22px;   /* 图标大小自己可调：16 / 18 / 20 */
+  width: 22px;
+  object-fit: contain;
 }
 
 /* 主体区域 */
